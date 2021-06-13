@@ -1,5 +1,6 @@
 package com.crud.tasks.controller;
 
+import com.crud.tasks.domain.Task;
 import com.crud.tasks.domain.TaskDto;
 import com.crud.tasks.mapper.TaskMapper;
 import com.crud.tasks.service.DbService;
@@ -37,8 +38,10 @@ public class TaskController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateTask")
-    public TaskDto updateTask(TaskDto task) {
-        return new TaskDto(1L, "edited test title", "Test content");
+    public TaskDto updateTask(@RequestBody TaskDto dto) {
+        Task task = mapper.mapToTask(dto);
+        Task savedTask = service.saveTask(task);
+        return mapper.mapToTaskDto(savedTask);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "createTask", consumes = MediaType.APPLICATION_JSON_VALUE)
