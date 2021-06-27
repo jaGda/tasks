@@ -5,7 +5,6 @@ echo GRADLE BUILD has errors - breaking work
 goto fail
 
 :rename
-@rem here will be placed next commands
 del build\libs\crud.war
 ren build\libs\tasks-0.0.1-SNAPSHOT.war crud.war
 if "%ERRORLEVEL%" == "0" goto stoptomcat
