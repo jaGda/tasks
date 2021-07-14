@@ -51,7 +51,12 @@ public class TrelloClient {
     }
 
     public CreatedTrelloCard createNewCard(TrelloCardDto trelloCardDto) {
-        return restTemplate.postForObject(getUrl(trelloCardDto), null, CreatedTrelloCard.class);
+        try {
+            return restTemplate.postForObject(getUrl(trelloCardDto), null, CreatedTrelloCard.class);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+            return new CreatedTrelloCard();
+        }
     }
 
     private URI getUrl(TrelloCardDto trelloCardDto) {
@@ -74,4 +79,5 @@ public class TrelloClient {
                 .queryParam("lists", "all")
                 .build().encode().toUri();
     }
+
 }
