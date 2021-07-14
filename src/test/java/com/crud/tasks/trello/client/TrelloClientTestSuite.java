@@ -33,6 +33,26 @@ class TrelloClientTestSuite {
     private TrelloConfig trelloConfig;
 
     @Test
+    void shouldReturnEmptyList() throws URISyntaxException {
+        //Given
+        when(trelloConfig.getTrelloApiEndpoint()).thenReturn("http://test.com");
+        when(trelloConfig.getTrelloAppKey()).thenReturn("test");
+        when(trelloConfig.getTrelloToken()).thenReturn("test");
+        when(trelloConfig.getUsername()).thenReturn("test");
+
+        URI uri = new URI("http://test.com/members/test/boards?key=test&token=test&fields=name,id&lists=all");
+
+        when(restTemplate.getForObject(uri, TrelloBoardDto[].class)).thenReturn(null);
+        //When
+        List<TrelloBoardDto> fetchedTrelloBoards = trelloClient.getTrelloBoards();
+
+        //Then
+        assertAll(
+                () -> assertEquals(0, fetchedTrelloBoards.size())
+        );
+    }
+
+    @Test
     void shouldCreateCard() throws URISyntaxException {
         // Given
         when(trelloConfig.getTrelloApiEndpoint()).thenReturn("http://test.com");
