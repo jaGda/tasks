@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/task")
+@RequiredArgsConstructor
 public class TaskController {
 
     private final TaskMapper mapper;
