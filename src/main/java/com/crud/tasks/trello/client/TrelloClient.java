@@ -53,7 +53,7 @@ public class TrelloClient {
         }
     }
 
-    private URI getUrl(TrelloCardDto trelloCardDto) {
+    public URI getUrl(TrelloCardDto trelloCardDto) {
         return UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards")
                 .queryParam("key", trelloConfig.getTrelloAppKey())
                 .queryParam("token", trelloConfig.getTrelloToken())
@@ -64,7 +64,7 @@ public class TrelloClient {
                 .build().encode().toUri();
     }
 
-    private URI buildURI() {
+    public URI buildURI() {
         return UriComponentsBuilder.fromHttpUrl(
                 trelloConfig.getTrelloApiEndpoint() + "/members/" + trelloConfig.getUsername() + "/boards")
                 .queryParam("key", trelloConfig.getTrelloAppKey())
