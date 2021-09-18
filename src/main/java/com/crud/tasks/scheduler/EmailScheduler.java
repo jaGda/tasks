@@ -3,6 +3,7 @@ package com.crud.tasks.scheduler;
 import com.crud.tasks.config.AdminConfig;
 import com.crud.tasks.domain.Mail;
 import com.crud.tasks.repository.TaskRepository;
+import com.crud.tasks.service.MailCreatorService;
 import com.crud.tasks.service.SimpleEmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,10 +23,11 @@ public class EmailScheduler {
     public void sendInformationEmail() {
         long size = taskRepository.count();
         simpleEmailService.send(Mail.builder()
-                .mailTo(adminConfig.getAdminMail())
-                .subject(SUBJECT)
-                .message(MESSAGE + size + (size != 1 ? " tasks." : " task."))
-                .build()
+                        .mailTo(adminConfig.getAdminMail())
+                        .subject(SUBJECT)
+                        .message(MESSAGE + size + (size != 1 ? " tasks." : " task."))
+                        .build(),
+                MailCreatorService.TEMPLATE_NUMBER_OF_TASK
         );
     }
 }

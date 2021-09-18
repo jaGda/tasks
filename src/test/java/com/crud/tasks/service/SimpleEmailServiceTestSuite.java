@@ -38,7 +38,7 @@ class SimpleEmailServiceTestSuite {
         SimpleMailMessage mailMessage = getSimpleMailMessage();
 
         //When
-        simpleEmailService.send(mail);
+        simpleEmailService.send(mail,MailCreatorService.TEMPLATE_NUMBER_OF_TASK);
 
         //Then
         verify(javaMailSender, times(1)).send(mailMessage);
@@ -56,7 +56,7 @@ class SimpleEmailServiceTestSuite {
         SimpleMailMessage mailMessage = getSimpleMailMessage();
 
         //When
-        simpleEmailService.send(mail);
+        simpleEmailService.send(mail,MailCreatorService.TEMPLATE_NUMBER_OF_TASK);
 
         //Then
         verify(javaMailSender, times(1)).send(mailMessage);
