@@ -41,13 +41,14 @@ class TrelloControllerTestSuit {
                 new CreatedTrelloCardDto("232", "Test", "https://test.com");
 
         when(trelloFacade.createdCard(any(TrelloCardDto.class))).thenReturn(createdTrelloCardDto);
+
         Gson gson = new Gson();
         String jsonContent = gson.toJson(trelloCardDto);
 
         // When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/v1/trello/createTrelloCard")
+                        .post("/v1/trello/cards")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(jsonContent))
@@ -67,7 +68,7 @@ class TrelloControllerTestSuit {
         // When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/v1/trello/getTrelloBoards")
+                        .get("/v1/trello/boards")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 // board fields
@@ -88,7 +89,7 @@ class TrelloControllerTestSuit {
         // When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/v1/trello/getTrelloBoards")
+                        .get("/v1/trello/boards")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));

@@ -37,27 +37,14 @@ class TaskControllerTestSuit {
     private DbService service;
 
     @Test
-    void shouldCreateTask() throws Exception {
-        // Given
-        TaskDto taskDto = new TaskDto(123L, "Title_test", "Content_test");
-        Task task = new Task(123L, "Title_test", "Content_test");
-
-        when(mapper.mapToTask(any(TaskDto.class))).thenReturn(task);
-        when(service.saveTask(task)).thenReturn(task);
-        Gson gson = new Gson();
-        String jsonContent = gson.toJson(taskDto);
-
-        // When & Then
+    void shouldDeleteTask() throws Exception {
+        // Given & When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/v1/task/createTask")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .characterEncoding("UTF-8")
-                        .content(jsonContent))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(print());
-        verify(mapper, times(1)).mapToTask(any(TaskDto.class));
-        verify(service, times(1)).saveTask(task);
+                        .delete("/v1/tasks/123")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+        verify(service, times(1)).deleteTask(123L);
     }
 
     @Test
@@ -69,17 +56,16 @@ class TaskControllerTestSuit {
         when(mapper.mapToTask(any(TaskDto.class))).thenReturn(task);
         when(service.saveTask(task)).thenReturn(task);
         when(mapper.mapToTaskDto(task)).thenReturn(taskDto);
+
         JSONObject jo = new JSONObject();
         jo.put("id", 123);
         jo.put("title", "Title_test");
         jo.put("content", "Content_test");
-//        Gson gson = new Gson();
-//        String jsonContent = gson.toJson(taskDto);
 
         // When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .put("/v1/task/updateTask")
+                        .put("/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(String.valueOf(jo)))
@@ -91,32 +77,44 @@ class TaskControllerTestSuit {
     }
 
     @Test
-    void shouldDeleteTask() throws Exception {
-        // Given & When & Then
+    void shouldCreateTask() throws Exception {
+        // Given
+        TaskDto taskDto = new TaskDto(123L, "Title_test", "Content_test");
+        Task task = new Task(123L, "Title_test", "Content_test");
+
+        when(mapper.mapToTask(any(TaskDto.class))).thenReturn(task);
+        when(service.saveTask(task)).thenReturn(task);
+
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(taskDto);
+
+        // When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .delete("/v1/task/deleteTask")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("id", "123"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-        verify(service, times(1)).deleteTask(123L);
+                        .post("/v1/tasks")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .characterEncoding("UTF-8")
+                        .content(jsonContent))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print());
+        verify(mapper, times(1)).mapToTask(any(TaskDto.class));
+        verify(service, times(1)).saveTask(task);
     }
 
     @Test
     void shouldFetchTaskById() throws Exception {
         // Given
-        Optional<Task> task = Optional.of(new Task(123L, "Title_test", "Content_test"));
+        Task task = new Task(123L, "Title_test", "Content_test");
         TaskDto taskDto = new TaskDto(123L, "Title_test", "Content_test");
 
-        when(mapper.mapToTaskDto(task.orElseThrow(TaskNotFoundException::new))).thenReturn(taskDto);
-        when(service.getTask(123L)).thenReturn(task);
+        when(service.getTask(123L)).thenReturn(Optional.of(task));
+        when(mapper.mapToTaskDto(task)).thenReturn(taskDto);
 
         // When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/v1/task/getTask")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("id", "123"))
+                        .get("/v1/tasks/123")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(123)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title", Matchers.is("Title_test")))
@@ -141,7 +139,7 @@ class TaskControllerTestSuit {
         // When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/v1/task/getTasks")
+                        .get("/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
